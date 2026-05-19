@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또 번호 추출기</title>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background: #fff;
+            width: 100%;
+            max-width: 800px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        h2 { text-align: center; color: #008CBA; margin-bottom: 30px; }
+        h3 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 30px; color: #555; }
+        .input-group {
+            display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 15px;
+        }
+        .input-group input[type="number"] { width: 60px; padding: 8px; text-align: center; border: 1px solid #ccc; border-radius: 6px; }
+        .input-group input[type="text"] { padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+        .btn { padding: 10px 16px; border: none; border-radius: 6px; background-color: #008CBA; color: white; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        .btn:hover { background-color: #007bb5; }
+        .btn-danger { background-color: #e74c3c; }
+        .btn-danger:hover { background-color: #c0392b; }
+        .btn-secondary { background-color: #7f8c8d; }
+        .btn-secondary:hover { background-color: #636e72; }
+        
+        .result-box {
+            background-color: #eafaf1; border: 1px solid #a8e6cf; padding: 20px; border-radius: 8px; margin-top: 20px; font-size: 1.4em; font-weight: bold; text-align: center; line-height: 1.6;
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: center; }
+        th, td { border: 1px solid #ddd; padding: 10px; }
+        th { background-color: #f8f9fa; font-weight: bold; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🎰 로또 번호 추출기</h2>
+
+    <h3>📝 최근 당첨 번호 입력</h3>
+    <div class="input-group">
+        <input type="number" id="round" placeholder="회차"> <span>|</span>
+        <input type="number" id="n1" placeholder="1번">
+        <input type="number" id="n2" placeholder="2번">
+        <input type="number" id="n3" placeholder="3번">
+        <input type="number" id="n4" placeholder="4번">
+        <input type="number" id="n5" placeholder="5번">
+        <input type="number" id="n6" placeholder="6번"> <span>|</span>
+        <input type="number" id="bonus" placeholder="보너스">
+        <button class="btn" onclick="saveDraw()">저장하기</button>
+    </div>
+
+    <h3>📌 고정수 (반자동) 설정</h3>
+    <div class="input-group">
+        <input type="text" id="fixedNums" placeholder="예: 1, 7, 42" style="width: 200px;">
+        <span style="font-size: 0.9em; color: #666;">(쉼표로 구분, 최대 5개)</span>
+    </div>
+
+    <h3>🎯 필터 통과 번호 뽑기</h3>
+    <div class="input-group">
+        <button class="btn" onclick="generateLotto(100)">최근 100회 기준 뽑기</button>
+        <button class="btn" onclick="generateLotto(50)">최근 50회 기준 뽑기</button>
+        <button class="btn" onclick="generateLotto(30)">최근 30회 기준 뽑기</button>
+        <button class="btn btn-secondary" onclick="resetSelection()">리셋</button>
+    </div>
+
+    <div id="resultArea" class="result-box" style="display: none;"></div>
+
+    <h3>📊 저장된 당첨 번호 (최대 100개)</h3>
+    <div style="text-align: right; margin-bottom: 10px;">
+        <button class="btn btn-danger" onclick="clearData()">모든 기록 초기화</button>
+    </div>
+    <table>
+        <thead>
+            <tr><th>회차</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>보너스</th></tr>
+        </thead>
+        <tbody id="historyTable"></tbody>
+    </table>
+</div>
+
+<script>
+    let lottoHistory = JSON.parse(localStorage.getItem('lottoData')) || [];
+
+    function renderTable() {
+        const tbody = document.getElementById('historyTable');
+        tbody.innerHTML = '';
+        lottoHistory.forEach(draw => {
+            tbody.innerHTML += `<tr>
+                <td><strong>${draw.round}</strong></td>
+                <td>${draw.nums[0]}</td><td>${draw.nums[1]}</td><td>${draw.nums[2]}</td>
+                <td>${draw.nums[3]}</td><td>${draw.nums[4]}</td><td>${draw.nums[5]}</td>
+                <td style="color:red;">${draw.bonus}</td>
+            </tr>`;
+        });
+    }
+
+    function saveDraw() {
+        const round = document.getElementById('round').value;
+        const nums = [
+            parseInt(document.getElementById('n1').value), parseInt(document.getElementById('n2').value),
+            parseInt(document.getElementById('n3').value), parseInt(document.getElementById('n4').value),
+            parseInt(document.getElementById('n5').value), parseInt(document.getElementById('n6').value)
+        ];
+        const bonus = parseInt(document.getElementById('bonus').value);
+
+        if(!round || nums.includes(NaN) || isNaN(bonus)) {
+            alert('회차와 모든 번호를 정확히 입력해줘!');
+            return;
+        }
+
+        nums.sort((a, b) => a - b);
+        lottoHistory.unshift({ round, nums, bonus });
+        if(lottoHistory.length > 100) lottoHistory.pop(); 
+        
+        localStorage.setItem('lottoData', JSON.stringify(lottoHistory));
+        renderTable();
+        document.querySelectorAll('.input-group input[type="number"]').forEach(input => input.value = '');
+    }
+
+    function clearData() {
+        if(confirm('정말 저장된 모든 당첨번호 기록을 지울까?')) {
+            lottoHistory = [];
+            localStorage.removeItem('lottoData');
+            renderTable();
+        }
+    }
+
+    // 리셋 기능 (고정수 지우고 결과창 숨기기)
+    function resetSelection() {
+        document.getElementById('fixedNums').value = '';
+        const resultArea = document.getElementById('resultArea');
+        resultArea.style.display = 'none';
+        resultArea.innerHTML = '';
+    }
+
+    // 고정수 가져오기 함수
+    function getFixedNumbers() {
+        const input = document.getElementById('fixedNums').value;
+        if(!input.trim()) return [];
+        
+        let nums = input.split(',').map(n => parseInt(n.trim()));
+        nums = nums.filter(n => !isNaN(n) && n >= 1 && n <= 45);
+        return [...new Set(nums)];
+    }
+
+    // 필터링 검증 함수 (과거 당첨 데이터베이스 확인 포함)
+    function isValidPattern(nums, lastDrawNums, targetHistory) {
+        const sum = nums.reduce((a, b) => a + b, 0);
+        if (sum < 100 || sum > 210) return false;
+
+        let maxConsecutive = 1, currentConsecutive = 1;
+        for(let i = 0; i < nums.length - 1; i++){
+            if(nums[i] + 1 === nums[i+1]) {
+                currentConsecutive++;
+                maxConsecutive = Math.max(maxConsecutive, currentConsecutive);
+            } else { currentConsecutive = 1; }
+        }
+        if(maxConsecutive >= 3) return false;
+
+        let endDigits = new Array(10).fill(0);
+        for(let num of nums) endDigits[num % 10]++;
+        if(endDigits.some(count => count >= 3)) return false;
+
+        let oddCount = nums.filter(n => n % 2 !== 0).length;
+        if(oddCount < 2 || oddCount > 4) return false;
+
+        let sections = [0, 0, 0];
+        for(let num of nums) {
+            if(num <= 15) sections[0]++;
+            else if(num <= 30) sections[1]++;
+            else sections[2]++;
+        }
+        if(sections.includes(0)) return false;
+
+        if (lastDrawNums && lastDrawNums.length === 6) {
+            let matchCount = nums.filter(n => lastDrawNums.includes(n)).length;
+            if (matchCount >= 3) return false;
+        }
+
+        // 🚨 선택한 최근 N회차(targetHistory) 내에서 완벽히 일치하는 당첨 조합이 있으면 배제
+        if (targetHistory && targetHistory.length > 0) {
+            for (let past of targetHistory) {
+                let isSame = past.nums.every((val, index) => val === nums[index]);
+                if (isSame) return false;
+            }
+        }
+
+        return true;
+    }
+
+    // 딱 1개 번호 생성 함수
+    function generateLotto(analysisLimit) {
+        // 지정한 회차만큼의 데이터만 잘라서 사용
+        const targetHistory = lottoHistory.slice(0, analysisLimit);
+        const lastDrawNums = targetHistory.length > 0 ? targetHistory[0].nums : null;
+        const fixedNums = getFixedNumbers();
+
+        if (fixedNums.length > 5) {
+            alert('고정수는 최대 5개까지만 입력할 수 있어!');
+            return;
+        }
+        
+        let generatedSet = null;
+        let attempts = 0;
+
+        // 딱 1개만 유효한 세트를 찾을 때까지 반복
+        while(!generatedSet && attempts < 50000) {
+            attempts++;
+            
+            let candSet = new Set(fixedNums);
+            
+            while(candSet.size < 6) {
+                candSet.add(Math.floor(Math.random() * 45) + 1);
+            }
+            
+            let arr = Array.from(candSet).sort((a,b) => a-b);
+
+            if(isValidPattern(arr, lastDrawNums, targetHistory)) {
+                generatedSet = arr;
+            }
+        }
+
+        const resultArea = document.getElementById('resultArea');
+        resultArea.style.display = 'block';
+
+        if(generatedSet) {
+            const sum = generatedSet.reduce((a, b) => a + b, 0);
+
+            const formatNumbers = (numsSet) => {
+                return numsSet.map(n => 
+                    fixedNums.includes(n) ? `<span style="color:#e74c3c; font-weight:900; text-decoration:underline;">${n}</span>` : n
+                ).join(', ');
+            };
+
+            resultArea.innerHTML = 
+                `<span style="color:#008CBA;">추천 조합:</span> [ ${formatNumbers(generatedSet)} ] <br>
+                 <span style="font-size:0.6em; color:#888;">(합계: ${sum})</span>
+                 <div style="font-size:0.5em; color:#999; margin-top:10px; font-weight:normal;">* 최근 ${analysisLimit}회 데이터 기준 과거 당첨 중복 제외 완료 (시도횟수: ${attempts}번)</div>`;
+        } else {
+            resultArea.innerHTML = "고정수와 필터 조건이 충돌해서 번호를 찾지 못했어. 고정수를 조금 변경해 봐!";
+        }
+    }
+
+    window.onload = renderTable;
+</script>
+
+</body>
+</html>
