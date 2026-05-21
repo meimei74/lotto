@@ -193,7 +193,7 @@
 
 <script>
     // 🚨 내 구글 웹 앱 URL 주소로 꼭 변경해줘! (CORS 우회를 위해)
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbwvab-whJGjxjEyjbG7zbSwIcemWEwBEQmYe6ZdU0iVFMbBOS7cNZenrbXLw_8vGru2Jg/exec'; 
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxptRurfzWFSkoUXz7mly7B7_a4p-EU6oiMw5L0Mnl8dWi1bdRFxmzgmF9795A_bzrhGg/exec'; 
 
     let lottoHistory = [];
     let favorites = JSON.parse(localStorage.getItem('lottoFavs')) || [];
@@ -242,7 +242,7 @@
         favorites.unshift(numStr); // 최신 스크랩이 맨 위로
         localStorage.setItem('lottoFavs', JSON.stringify(favorites));
         renderFavorites();
-        alert('보관함에 번호를 저장했어!');
+        
     }
 
     function deleteFavorite(index) {
@@ -269,7 +269,7 @@
 
         document.getElementById('dataStatus').innerText = "데이터 업로드 중...";
         await fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ round, nums, bonus }) });
-        alert(`${round}회 당첨번호가 기록되었어!`);
+        
         document.querySelectorAll('.num-grid input, .side-inputs input').forEach(input => input.value = '');
         setTimeout(loadDataFromCloud, 1500);
     }
