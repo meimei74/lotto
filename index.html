@@ -19,38 +19,26 @@
         .container { 
             background: #fff; 
             width: 100%; 
-            max-width: 600px; /* 모바일~태블릿 최적화 너비 */
-            padding: 20px; 
+            max-width: 600px; 
+            padding: 25px; 
             border-radius: 12px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
-        h2 { text-align: center; color: #008CBA; margin-top: 0; margin-bottom: 20px; font-size: 1.5em; }
-        h3 { border-bottom: 2px solid #eee; padding-bottom: 8px; margin-top: 25px; margin-bottom: 15px; color: #555; text-align: center; font-size: 1.1em; }
+        h2 { text-align: center; color: #008CBA; margin-top: 0; margin-bottom: 25px; font-size: 1.6em; }
+        h3 { border-bottom: 2px solid #eee; padding-bottom: 8px; margin-top: 30px; margin-bottom: 15px; color: #555; text-align: center; font-size: 1.15em; }
         
-        /* 모바일 최적화 입력칸 */
+        /* 공통 입력칸 스타일 */
         input[type="number"], input[type="text"] { 
             width: 100%; 
             padding: 12px; 
             text-align: center; 
             border: 1px solid #ccc; 
             border-radius: 8px; 
-            font-size: 16px; /* iOS 자동 확대 방지 */
+            font-size: 16px; 
             background-color: #fafafa;
+            outline: none;
         }
-        
-        /* 번호 입력 영역 Grid (PC: 1줄, 모바일: 2줄) */
-        .num-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 8px;
-            margin: 10px 0;
-        }
-        .side-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
+        input:focus { border-color: #008CBA; background-color: #fff; }
         
         /* 버튼 공통 스타일 */
         .btn { 
@@ -63,49 +51,56 @@
             font-weight: bold; 
             font-size: 15px;
             cursor: pointer; 
-            transition: background 0.3s; 
+            transition: all 0.3s; 
         }
-        .btn:hover { background-color: #007bb5; }
+        .btn:hover { background-color: #007bb5; transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
         .btn-excel { background-color: #27ae60; }
         .btn-excel:hover { background-color: #219150; }
         .btn-secondary { background-color: #7f8c8d; }
         .btn-secondary:hover { background-color: #636e72; }
         
-        /* 버튼 영역 Grid */
-        .btn-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .btn-group-large {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            margin-top: 15px;
-        }
+        /* 그리드 시스템 */
+        .num-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 10px 0; }
+        .side-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .btn-group-full { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
 
+        /* 결과창 */
         .result-box { 
             background-color: #eafaf1; 
             border: 1px solid #a8e6cf; 
-            padding: 20px 10px; 
-            border-radius: 8px; 
+            padding: 25px 15px; 
+            border-radius: 10px; 
             margin-top: 20px; 
-            font-size: 1.2em; 
+            font-size: 1.3em; 
             font-weight: bold; 
             text-align: center; 
             line-height: 1.6; 
             word-break: keep-all;
         }
-        .status-text { text-align: center; color: #888; font-size: 0.9em; margin-top: 15px; font-weight: bold; }
+        
+        /* 상태 텍스트 */
+        .status-text { text-align: center; color: #888; font-size: 0.95em; margin: 20px 0; font-weight: bold; padding: 10px; background: #f9f9f9; border-radius: 8px; }
         .loading { color: #3498db; }
-        .desc-text { text-align: center; font-size: 0.85em; color: #666; margin-top: 5px; margin-bottom: 15px;}
+        
+        .info-text { text-align: center; font-size: 0.85em; color: #666; margin-top: 6px; }
+        .excel-guide { 
+            font-size: 0.8em; 
+            color: #999; 
+            text-align: center; 
+            margin-top: 10px; 
+            line-height: 1.5; 
+            padding: 10px; 
+            border: 1px dashed #ddd; 
+            border-radius: 8px;
+        }
 
-        /* 스마트폰 세로 모드 (600px 이하) 전용 스타일 */
+        /* 모바일 최적화 (600px 이하) */
         @media (max-width: 600px) {
-            .num-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-            .btn-group { grid-template-columns: 1fr; } /* 버튼도 세로로 꽉 차게 */
-            .btn-group-large { grid-template-columns: 1fr; }
+            .num-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .btn-group { grid-template-columns: 1fr; }
+            h2 { font-size: 1.4em; }
         }
     </style>
 </head>
@@ -114,7 +109,22 @@
 <div class="container">
     <h2>🎰 로또 번호 추출기 (Cloud)</h2>
 
-    <h3>📝 최근 당첨 번호 입력</h3>
+    <h3>🎯 고정수 설정 & 번호 뽑기</h3>
+    <input type="text" id="fixedNums" placeholder="고정수 (예: 1, 7) 최대 5개">
+    <div class="info-text">(쉼표로 구분하여 입력)</div>
+
+    <div class="btn-group-full" style="margin-top:15px;">
+        <button class="btn" onclick="generateLotto(100)">최근 100회 데이터 기준 추출</button>
+        <button class="btn" onclick="generateLotto(50)">최근 50회 데이터 기준 추출</button>
+        <button class="btn" onclick="generateLotto(30)">최근 30회 데이터 기준 추출</button>
+        <button class="btn btn-secondary" onclick="resetSelection()">입력 및 결과 리셋</button>
+    </div>
+
+    <div id="resultArea" class="result-box" style="display: none;"></div>
+
+    <div id="dataStatus" class="status-text loading">데이터 동기화 중...</div>
+
+    <h3>📝 최근 당첨 번호 데이터 입력</h3>
     
     <div class="side-inputs">
         <input type="number" id="round" placeholder="회차">
@@ -131,50 +141,42 @@
     </div>
 
     <div class="btn-group">
-        <button class="btn" onclick="saveDraw()">데이터 저장</button>
-        <button class="btn btn-excel" onclick="document.getElementById('excelUpload').click()">엑셀 대량 업로드</button>
+        <button class="btn" onclick="saveDraw()">수동 저장</button>
+        <button class="btn btn-excel" onclick="document.getElementById('excelUpload').click()">엑셀 업로드</button>
         <input type="file" id="excelUpload" accept=".xlsx, .xls" style="display:none;" onchange="handleExcelUpload(event)">
     </div>
-    
-    <div id="dataStatus" class="status-text loading">구글 시트에서 데이터를 불러오는 중...</div>
 
-    <h3>📌 고정수 설정 & 번호 뽑기</h3>
-    
-    <input type="text" id="fixedNums" placeholder="고정수 (예: 1, 7) 최대 5개">
-    <div class="desc-text">(쉼표로 구분하여 입력)</div>
-
-    <div class="btn-group-large">
-        <button class="btn" onclick="generateLotto(100)">최근 100회 기준 조합 뽑기</button>
-        <button class="btn" onclick="generateLotto(50)">최근 50회 기준 조합 뽑기</button>
-        <button class="btn" onclick="generateLotto(30)">최근 30회 기준 조합 뽑기</button>
-        <button class="btn btn-secondary" onclick="resetSelection()">입력 및 결과 리셋</button>
+    <div class="excel-guide">
+        <b>[엑셀 업로드 가이드]</b><br>
+        A열:회차 | B~G열:당첨번호(1~6) | H열:보너스<br>
+        제목줄이 있어도 숫자가 있는 행부터 자동으로 인식합니다.
     </div>
-
-    <div id="resultArea" class="result-box" style="display: none;"></div>
 </div>
 
 <script>
-    // 🚨 여기에 아까 복사한 구글 웹 앱 URL 주소를 넣어줘!
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbwvab-whJGjxjEyjbG7zbSwIcemWEwBEQmYe6ZdU0iVFMbBOS7cNZenrbXLw_8vGru2Jg/exec';
+    // 🚨 여기에 구글 앱스 스크립트 배포 후 받은 웹 앱 URL을 넣어줘!
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbwvab-whJGjxjEyjbG7zbSwIcemWEwBEQmYe6ZdU0iVFMbBOS7cNZenrbXLw_8vGru2Jg/exec'; 
 
     let lottoHistory = [];
 
+    // 클라우드 데이터 로드
     async function loadDataFromCloud() {
         const statusDiv = document.getElementById('dataStatus');
         statusDiv.className = "status-text loading";
-        statusDiv.innerText = "구글 시트에서 최신 데이터를 동기화하는 중...";
+        statusDiv.innerText = "구글 시트에서 데이터를 불러오는 중...";
         try {
             const response = await fetch(GAS_URL);
             lottoHistory = await response.json();
             statusDiv.className = "status-text";
-            statusDiv.innerText = `현재 클라우드에 저장된 데이터: ${lottoHistory.length}개`;
+            statusDiv.innerText = `현재 저장된 데이터: ${lottoHistory.length}개`;
         } catch (error) {
             statusDiv.className = "status-text";
             statusDiv.style.color = "red";
-            statusDiv.innerText = "데이터 동기화 실패! URL 설정을 확인해줘.";
+            statusDiv.innerText = "연결 실패! 구글 시트 설정을 확인해줘.";
         }
     }
 
+    // 데이터 개별 저장
     async function saveDraw() {
         const round = parseInt(document.getElementById('round').value);
         const nums = [
@@ -190,21 +192,20 @@
         }
         nums.sort((a, b) => a - b);
 
-        const data = { round, nums, bonus };
-        
-        document.getElementById('dataStatus').innerText = "클라우드에 저장 중...";
+        document.getElementById('dataStatus').innerText = "데이터 업로드 중...";
         
         await fetch(GAS_URL, {
             method: 'POST',
             mode: 'no-cors',
-            body: JSON.stringify(data)
+            body: JSON.stringify({ round, nums, bonus })
         });
 
-        alert(`${round}회 당첨번호가 저장되었어!`);
+        alert(`${round}회 당첨번호가 클라우드에 기록되었어!`);
         document.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
         setTimeout(loadDataFromCloud, 1500);
     }
 
+    // 엑셀 업로드 처리
     function handleExcelUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -231,22 +232,23 @@
             });
 
             if (newRecords.length > 0) {
-                document.getElementById('dataStatus').innerText = "대량 데이터 클라우드 전송 중...";
+                document.getElementById('dataStatus').innerText = "엑셀 데이터 동기화 중...";
                 await fetch(GAS_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     body: JSON.stringify(newRecords)
                 });
-                alert(`엑셀 데이터 ${newRecords.length}개가 동기화되었어!`);
+                alert(`${newRecords.length}개의 데이터가 구글 시트에 업데이트되었어!`);
                 setTimeout(loadDataFromCloud, 2000);
             } else {
-                alert('유효한 데이터 형식이 아닙니다.');
+                alert('엑셀 파일의 데이터 형식이 올바르지 않아.');
             }
             event.target.value = '';
         };
         reader.readAsArrayBuffer(file);
     }
 
+    // 리셋
     function resetSelection() {
         document.getElementById('fixedNums').value = '';
         const resultArea = document.getElementById('resultArea');
@@ -262,6 +264,7 @@
         return [...new Set(nums)];
     }
 
+    // [VBA 기반 로직 필터링]
     function isValidPattern(nums, lastDrawNums, targetHistory) {
         const sum = nums.reduce((a, b) => a + b, 0);
         if (sum < 100 || sum > 210) return false;
@@ -304,9 +307,10 @@
         return true;
     }
 
+    // 번호 생성
     function generateLotto(analysisLimit) {
         if (lottoHistory.length === 0) {
-            alert('아직 클라우드에 로드된 당첨번호가 없어! 잠시만 기다리거나 데이터를 입력해줘.');
+            alert('아직 클라우드 데이터를 불러오는 중이야. 잠시만 기다려줘!');
             return;
         }
         const targetHistory = lottoHistory.slice(0, analysisLimit);
@@ -314,7 +318,7 @@
         const fixedNums = getFixedNumbers();
 
         if (fixedNums.length > 5) {
-            alert('고정수는 최대 5개까지만 입력할 수 있어!');
+            alert('고정수는 최대 5개까지만 넣을 수 있어!');
             return;
         }
         
@@ -341,13 +345,17 @@
             };
 
             resultArea.innerHTML = 
-                `<span style="color:#008CBA;">추천 조합:</span><br><br>[ ${formatNumbers(generatedSet)} ] <br><br>
-                 <span style="font-size:0.7em; color:#888;">(합계: ${sum})</span>
-                 <div style="font-size:0.6em; color:#999; margin-top:12px; font-weight:normal; line-height: 1.4;">
-                    * 최근 ${analysisLimit}회 데이터 기준 이월수 및 중복 제외 완료<br>(시도횟수: ${attempts}번)
+                `<span style="color:#008CBA; font-size:0.9em;">행운의 추천 조합</span><br><br>
+                 <div style="background:#fff; padding:15px; border-radius:50px; display:inline-block; border:2px solid #a8e6cf; margin-bottom:10px;">
+                    [ ${formatNumbers(generatedSet)} ]
+                 </div><br>
+                 <span style="font-size:0.7em; color:#888;">(번호 합계: ${sum})</span>
+                 <div style="font-size:0.55em; color:#999; margin-top:15px; font-weight:normal; line-height:1.4;">
+                    * 최근 ${analysisLimit}회 데이터 패턴 분석 및 이월·중복 제외 완료<br>
+                    (최종 조합 탐색 시도: ${attempts}회)
                  </div>`;
         } else {
-            resultArea.innerHTML = "고정수와 필터 조건이 충돌해서 번호를 찾지 못했어. 고정수를 조금 변경해 봐!";
+            resultArea.innerHTML = "조건에 맞는 조합을 찾지 못했어. 고정수를 조금 바꿔서 다시 시도해 봐!";
         }
     }
 
