@@ -22,7 +22,7 @@
             display: flex;
             gap: 20px;
             width: 100%;
-            max-width: 950px;
+            max-width: 950px; /* 전체 너비는 유지 */
             align-items: flex-start;
         }
         
@@ -35,10 +35,10 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
         
-        /* ⭐ 3번 기능: 찜한 번호 보관함 스타일 */
+        /* ⭐ 찜한 번호 보관함 스타일 (너비 증대) */
         .favorites-box {
             background: #fff;
-            width: 300px;
+            width: 340px; /* ⭐ 300px -> 340px로 늘렸어 */
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -103,7 +103,7 @@
         .info-text { text-align: center; font-size: 0.85em; color: #666; margin-top: 4px; margin-bottom: 12px; }
         .excel-guide { font-size: 0.8em; color: #999; text-align: center; margin-top: 10px; line-height: 1.5; padding: 10px; border: 1px dashed #ddd; border-radius: 8px; }
 
-        /* 찜한 번호 아이템 스타일 */
+        /* ⭐ 찜한 번호 아이템 스타일 (한 줄 유지) */
         .fav-item {
             display: flex;
             justify-content: space-between;
@@ -115,12 +115,22 @@
             border: 1px solid #eee;
             font-weight: bold;
             font-size: 0.95em;
+            word-break: keep-all; /* 단어 단위로 줄바꿈 방지 */
+            white-space: nowrap; /* ⭐ 강제 한 줄 유지 */
         }
-        .fav-del { cursor: pointer; color: #ff7675; font-size: 0.9em; padding: 0 5px; }
+        
+        /* 번호가 너무 좁아서 잘리는 경우를 대비한 보호 조치 */
+        .fav-item > span:first-child {
+            overflow: hidden;
+            text-overflow: ellipsis; /* 너무 좁으면 끝에 ... 표시 */
+            padding-right: 5px;
+        }
+
+        .fav-del { cursor: pointer; color: #ff7675; font-size: 0.9em; padding: 0 5px; flex-shrink: 0; }
         .fav-del:hover { color: #c0392b; font-weight: bold; }
 
-        /* 모바일 세로 모드 최적화 (화면이 850px 이하로 줄어들면 아래로 정렬) */
-        @media (max-width: 850px) {
+        /* 모바일 세로 모드 최적화 (화면이 좁아지면 아래로 정렬) */
+        @media (max-width: 890px) { /* ⭐ 너비가 늘어난 만큼 미디어 쿼리 기준도 약간 조정 */
             .wrapper { flex-direction: column; align-items: center; }
             .favorites-box { width: 100%; }
             .num-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -182,7 +192,7 @@
 </div>
 
 <script>
-    // 🚨 내 구글 웹 앱 URL 주소로 꼭 변경해줘!
+    // 🚨 내 구글 웹 앱 URL 주소로 꼭 변경해줘! (CORS 우회를 위해)
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbwvab-whJGjxjEyjbG7zbSwIcemWEwBEQmYe6ZdU0iVFMbBOS7cNZenrbXLw_8vGru2Jg/exec'; 
 
     let lottoHistory = [];
@@ -205,7 +215,7 @@
         }
     }
 
-    // ⭐ 3번 기능: 찜한 번호 보관함 출력 및 삭제 로직
+    // 찜한 번호 보관함 출력 및 삭제 로직
     function renderFavorites() {
         const favListDiv = document.getElementById('favList');
         favListDiv.innerHTML = '';
@@ -217,7 +227,7 @@
             const formatted = setStr.split(',').map(n => String(n).padStart(2, '0')).join(', ');
             favListDiv.innerHTML += `
                 <div class="fav-item">
-                    <span>📌 [ ${formatted} ]</span>
+                    <span title="[ ${formatted} ]">📌 [ ${formatted} ]</span>
                     <span class="fav-del" onclick="deleteFavorite(${index})">❌</span>
                 </div>
             `;
@@ -312,7 +322,7 @@
         return [...new Set(nums)];
     }
 
-    // ⭐ 2번 기능: 데이터베이스 기반 장기 미출현 번호 가중치 부여 랜덤 추출 함수 (Hot & Cold)
+    // 데이터베이스 기반 장기 미출현 번호 가중치 부여 랜덤 추출 함수 (Hot & Cold)
     function getWeightedRandom(currentSet, excludedNums, targetHistory) {
         let weights = new Array(46).fill(0);
         let totalWeight = 0;
@@ -382,7 +392,7 @@
         for(let num of nums) {
             if(num <= 15) sections[0]++;
             else if(num <= 30) sections[1]++;
-            else sections[2]++;
+            else sections[Section 2]++;
         }
         if(sections.includes(0)) return false;
 
@@ -421,7 +431,6 @@
             let candSet = new Set(fixedNums);
             
             while(candSet.size < 6) {
-                // ⭐ 2번 가중치 반영된 번호 뽑기 모듈 호출
                 let nextNum = getWeightedRandom(Array.from(candSet), excludedNums, targetHistory);
                 candSet.add(nextNum);
             }
@@ -442,7 +451,7 @@
                 }).join(', ');
             };
 
-            // 결과창 내부 구성 (⭐ 3번기능: 찜하기 버튼 연동)
+            // 결과창 내부 구성 (찜하기 버튼 연동)
             resultArea.innerHTML = 
                 `<span style="color:#008CBA; font-size:0.9em;">행운의 추천 조합</span><br><br>
                  <div style="background:#fff; padding:15px; border-radius:50px; display:inline-block; border:2px solid #a8e6cf; margin-bottom:5px;">
