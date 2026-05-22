@@ -16,61 +16,14 @@
             display: flex; 
             justify-content: center; 
         }
-        
-        /* PC에서는 가로 배열, 모바일에서는 세로 배열을 위한 전체 래퍼 */
-        .wrapper {
-            display: flex;
-            gap: 20px;
-            width: 100%;
-            max-width: 950px; /* 전체 너비는 유지 */
-            align-items: flex-start;
-        }
-        
-        .container { 
-            background: #fff; 
-            flex: 1;
-            min-width: 0; /* flex 자식 축소 버그 방지 */
-            padding: 25px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-        }
-        
-        /* ⭐ 찜한 번호 보관함 스타일 (너비 증대) */
-        .favorites-box {
-            background: #fff;
-            width: 340px; /* ⭐ 300px -> 340px로 늘렸어 */
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        
+        .wrapper { display: flex; gap: 20px; width: 100%; max-width: 950px; align-items: flex-start; }
+        .container { background: #fff; flex: 1; min-width: 0; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .favorites-box { background: #fff; width: 340px; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #008CBA; margin-top: 0; margin-bottom: 25px; font-size: 1.6em; }
         h3 { border-bottom: 2px solid #eee; padding-bottom: 8px; margin-top: 30px; margin-bottom: 15px; color: #555; text-align: center; font-size: 1.15em; }
-        
-        input[type="number"], input[type="text"] { 
-            width: 100%; 
-            padding: 12px; 
-            text-align: center; 
-            border: 1px solid #ccc; 
-            border-radius: 8px; 
-            font-size: 16px; 
-            background-color: #fafafa;
-            outline: none;
-        }
+        input[type="number"], input[type="text"] { width: 100%; padding: 12px; text-align: center; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; background-color: #fafafa; outline: none; }
         input:focus { border-color: #008CBA; background-color: #fff; }
-        
-        .btn { 
-            width: 100%;
-            padding: 14px 10px; 
-            border: none; 
-            border-radius: 8px; 
-            background-color: #008CBA; 
-            color: white; 
-            font-weight: bold; 
-            font-size: 15px;
-            cursor: pointer; 
-            transition: all 0.3s; 
-        }
+        .btn { width: 100%; padding: 14px 10px; border: none; border-radius: 8px; background-color: #008CBA; color: white; font-weight: bold; font-size: 15px; cursor: pointer; transition: all 0.3s; }
         .btn:hover { background-color: #007bb5; transform: translateY(-1px); }
         .btn:active { transform: translateY(0); }
         .btn-excel { background-color: #27ae60; }
@@ -79,64 +32,20 @@
         .btn-secondary:hover { background-color: #636e72; }
         .btn-scrap { background-color: #ff7675; width: auto; display: inline-block; padding: 10px 20px; margin-top: 15px; font-size: 14px; }
         .btn-scrap:hover { background-color: #e84393; }
-        
         .num-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 10px 0; }
         .side-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .btn-group-full { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
-
-        .result-box { 
-            background-color: #eafaf1; 
-            border: 1px solid #a8e6cf; 
-            padding: 25px 15px; 
-            border-radius: 10px; 
-            margin-top: 20px; 
-            font-size: 1.3em; 
-            font-weight: bold; 
-            text-align: center; 
-            line-height: 1.6; 
-            word-break: keep-all;
-        }
-        
+        .result-box { background-color: #eafaf1; border: 1px solid #a8e6cf; padding: 25px 15px; border-radius: 10px; margin-top: 20px; font-size: 1.3em; font-weight: bold; text-align: center; line-height: 1.6; word-break: keep-all; }
         .status-text { text-align: center; color: #888; font-size: 0.95em; margin: 20px 0; font-weight: bold; padding: 10px; background: #f9f9f9; border-radius: 8px; }
         .loading { color: #3498db; }
         .info-text { text-align: center; font-size: 0.85em; color: #666; margin-top: 4px; margin-bottom: 12px; }
         .excel-guide { font-size: 0.8em; color: #999; text-align: center; margin-top: 10px; line-height: 1.5; padding: 10px; border: 1px dashed #ddd; border-radius: 8px; }
-
-        /* ⭐ 찜한 번호 아이템 스타일 (한 줄 유지) */
-        .fav-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f9f9f9;
-            padding: 12px 10px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            border: 1px solid #eee;
-            font-weight: bold;
-            font-size: 0.95em;
-            word-break: keep-all; /* 단어 단위로 줄바꿈 방지 */
-            white-space: nowrap; /* ⭐ 강제 한 줄 유지 */
-        }
-        
-        /* 번호가 너무 좁아서 잘리는 경우를 대비한 보호 조치 */
-        .fav-item > span:first-child {
-            overflow: hidden;
-            text-overflow: ellipsis; /* 너무 좁으면 끝에 ... 표시 */
-            padding-right: 5px;
-        }
-
+        .fav-item { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 12px 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #eee; font-weight: bold; font-size: 0.95em; word-break: keep-all; white-space: nowrap; }
+        .fav-item > span:first-child { overflow: hidden; text-overflow: ellipsis; padding-right: 5px; }
         .fav-del { cursor: pointer; color: #ff7675; font-size: 0.9em; padding: 0 5px; flex-shrink: 0; }
         .fav-del:hover { color: #c0392b; font-weight: bold; }
-
-        /* 모바일 세로 모드 최적화 (화면이 좁아지면 아래로 정렬) */
-        @media (max-width: 890px) { /* ⭐ 너비가 늘어난 만큼 미디어 쿼리 기준도 약간 조정 */
-            .wrapper { flex-direction: column; align-items: center; }
-            .favorites-box { width: 100%; }
-            .num-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-            .btn-group { grid-template-columns: 1fr; }
-            h2 { font-size: 1.4em; }
-        }
+        @media (max-width: 890px) { .wrapper { flex-direction: column; align-items: center; } .favorites-box { width: 100%; } .num-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; } .btn-group { grid-template-columns: 1fr; } h2 { font-size: 1.4em; } }
     </style>
 </head>
 <body>
@@ -144,12 +53,9 @@
 <div class="wrapper">
     <div class="container">
         <h2>🎰 로또 번호 추출기 (Cloud)</h2>
-
         <h3>🎯 번호 조건 설정 & 추출</h3>
-        
         <input type="text" id="fixedNums" placeholder="고정수 (예: 1, 7) 최대 5개">
         <div class="info-text">(포함할 번호를 쉼표로 구분)</div>
-
         <input type="text" id="excludedNums" placeholder="제외수 (예: 4, 18) 최대 10개">
         <div class="info-text">(제외할 번호를 쉼표로 구분)</div>
 
@@ -161,7 +67,6 @@
         </div>
 
         <div id="resultArea" class="result-box" style="display: none;"></div>
-
         <div id="dataStatus" class="status-text loading">데이터 동기화 중...</div>
 
         <h3>📝 최근 당첨 번호 데이터 입력</h3>
@@ -179,10 +84,7 @@
             <button class="btn btn-excel" onclick="document.getElementById('excelUpload').click()">엑셀 업로드</button>
             <input type="file" id="excelUpload" accept=".xlsx, .xls" style="display:none;" onchange="handleExcelUpload(event)">
         </div>
-        <div class="excel-guide">
-            <b>[엑셀 업로드 가이드]</b><br>
-            A열:회차 | B~G열:당첨번호(1~6) | H열:보너스
-        </div>
+        <div class="excel-guide"><b>[엑셀 업로드 가이드]</b><br>A열:회차 | B~G열:당첨번호(1~6) | H열:보너스</div>
     </div>
 
     <div class="favorites-box">
@@ -192,13 +94,12 @@
 </div>
 
 <script>
-    // 🚨 내 구글 웹 앱 URL 주소로 꼭 변경해줘! (CORS 우회를 위해)
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxptRurfzWFSkoUXz7mly7B7_a4p-EU6oiMw5L0Mnl8dWi1bdRFxmzgmF9795A_bzrhGg/exec'; 
+    // 🚨 새 배포 후 발급받은 구글 웹 앱 URL 주소로 꼭 교체해줘!
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxjjwQl9Ouamlkf3IRb6gEXhIZNpfZreJsvxluZ_KeE1Ai8pmDYpuZrWm4ar-ILmkuVkw/exec'; 
 
     let lottoHistory = [];
-    let favorites = JSON.parse(localStorage.getItem('lottoFavs')) || [];
+    let favorites = [];
 
-    // 클라우드 데이터 로드
     async function loadDataFromCloud() {
         const statusDiv = document.getElementById('dataStatus');
         statusDiv.className = "status-text loading";
@@ -208,6 +109,11 @@
             lottoHistory = await response.json();
             statusDiv.className = "status-text";
             statusDiv.innerText = `현재 저장된 데이터: ${lottoHistory.length}개`;
+
+            // 클라우드에서 찜한 번호 가져오기
+            const favResponse = await fetch(GAS_URL + '?type=fav');
+            favorites = await favResponse.json();
+            renderFavorites();
         } catch (error) {
             statusDiv.className = "status-text";
             statusDiv.style.color = "red";
@@ -215,7 +121,6 @@
         }
     }
 
-    // 찜한 번호 보관함 출력 및 삭제 로직
     function renderFavorites() {
         const favListDiv = document.getElementById('favList');
         favListDiv.innerHTML = '';
@@ -234,24 +139,35 @@
         });
     }
 
-    function scrapNumber(numStr) {
+    async function scrapNumber(numStr) {
         if (favorites.includes(numStr)) {
             alert('이미 보관함에 찜한 번호야!');
             return;
         }
-        favorites.unshift(numStr); // 최신 스크랩이 맨 위로
-        localStorage.setItem('lottoFavs', JSON.stringify(favorites));
+        // 시트에 저장 요청 전송
+        await fetch(GAS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({ action: 'addFav', numStr: numStr })
+        });
+        favorites.unshift(numStr);
         renderFavorites();
-        
+        setTimeout(loadDataFromCloud, 1000);
     }
 
-    function deleteFavorite(index) {
-        favorites.splice(index, 1); // 배열에서 실제 삭제
-        localStorage.setItem('lottoFavs', JSON.stringify(favorites));
-        renderFavorites(); // 화면 새로고침
+    async function deleteFavorite(index) {
+        const numStr = favorites[index];
+        // 시트에서 삭제 요청 전송
+        await fetch(GAS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({ action: 'delFav', numStr: numStr })
+        });
+        favorites.splice(index, 1);
+        renderFavorites();
+        setTimeout(loadDataFromCloud, 1000);
     }
 
-    // 데이터 수동 저장
     async function saveDraw() {
         const round = parseInt(document.getElementById('round').value);
         const nums = [
@@ -269,12 +185,10 @@
 
         document.getElementById('dataStatus').innerText = "데이터 업로드 중...";
         await fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ round, nums, bonus }) });
-        
         document.querySelectorAll('.num-grid input, .side-inputs input').forEach(input => input.value = '');
         setTimeout(loadDataFromCloud, 1500);
     }
 
-    // 엑셀 업로드
     function handleExcelUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -306,7 +220,6 @@
         reader.readAsArrayBuffer(file);
     }
 
-    // 리셋
     function resetSelection() {
         document.getElementById('fixedNums').value = '';
         document.getElementById('excludedNums').value = '';
@@ -322,42 +235,35 @@
         return [...new Set(nums)];
     }
 
-    // 데이터베이스 기반 장기 미출현 번호 가중치 부여 랜덤 추출 함수 (Hot & Cold)
     function getWeightedRandom(currentSet, excludedNums, targetHistory) {
         let weights = new Array(46).fill(0);
         let totalWeight = 0;
-
         let counts = new Array(46).fill(0);
-        let intervals = new Array(46).fill(targetHistory.length); // 기본값은 최대 미출현 값
+        let intervals = new Array(46).fill(targetHistory.length);
 
-        // 1. 역대 출현 빈도 계산
         targetHistory.forEach(draw => {
             draw.nums.forEach(n => { if(n >= 1 && n <= 45) counts[n]++; });
         });
 
-        // 2. 미출현 기간(Interval) 계산
         for (let i = 1; i <= 45; i++) {
             for (let j = 0; j < targetHistory.length; j++) {
                 if (targetHistory[j].nums.includes(i)) {
-                    intervals[i] = j; // 0이면 직전 회차 출현, 클수록 오랫동안 안 나온 수
+                    intervals[i] = j;
                     break;
                 }
             }
         }
 
-        // 3. 번호별 가중치 산출 (Cold 보너스 점수 부여)
         for (let i = 1; i <= 45; i++) {
             if (currentSet.includes(i) || excludedNums.includes(i)) {
-                weights[i] = 0; // 고정수 세트에 이미 있거나 제외수면 확률 0%
+                weights[i] = 0;
                 continue;
             }
-            // 출현 빈도가 낮을수록(100 - counts), 안 나온 기간이 길수록(intervals * 2) 가중치 대폭 증가
             let w = (100 - counts[i]) + (intervals[i] * 2);
             weights[i] = Math.max(1, w); 
             totalWeight += weights[i];
         }
 
-        // 4. 가중치 기반 주사위 굴리기
         let rnd = Math.random() * totalWeight;
         let sum = 0;
         for (let i = 1; i <= 45; i++) {
@@ -367,7 +273,6 @@
         return Math.floor(Math.random() * 45) + 1;
     }
 
-    // 기본 규칙 검증 필터 (VBA 기반)
     function isValidPattern(nums, lastDrawNums, targetHistory) {
         const sum = nums.reduce((a, b) => a + b, 0);
         if (sum < 100 || sum > 210) return false;
@@ -392,7 +297,7 @@
         for(let num of nums) {
             if(num <= 15) sections[0]++;
             else if(num <= 30) sections[1]++;
-            else sections[2]++; // ✨ 이렇게 숫자 2로 고쳐줘!
+            else sections[2]++;
         }
         if(sections.includes(0)) return false;
 
@@ -410,15 +315,17 @@
         return true;
     }
 
-    // 번호 생성 엔진
     function generateLotto(analysisLimit) {
+        if (lottoHistory.length === 0) {
+            alert('아직 클라우드 데이터를 불러오는 중이야. 잠시만 기다려줘!');
+            return;
+        }
         const targetHistory = lottoHistory.slice(0, analysisLimit);
         const lastDrawNums = targetHistory.length > 0 ? targetHistory[0].nums : null;
         
         const fixedNums = parseCommaInput('fixedNums');
         const excludedNums = parseCommaInput('excludedNums');
 
-        // 예외 조건 처리
         if (fixedNums.length > 5) { alert('고정수는 최대 5개까지만 넣을 수 있어!'); return; }
         if (fixedNums.some(n => excludedNums.includes(n))) { alert('고정수와 제외수에 같은 숫자가 들어가 있어! 확인해 줘.'); return; }
         if (45 - excludedNums.length < 6) { alert('제외수가 너무 많아서 조합을 만들 수 없어!'); return; }
@@ -429,12 +336,10 @@
         while(!generatedSet && attempts < 50000) {
             attempts++;
             let candSet = new Set(fixedNums);
-            
             while(candSet.size < 6) {
                 let nextNum = getWeightedRandom(Array.from(candSet), excludedNums, targetHistory);
                 candSet.add(nextNum);
             }
-            
             let arr = Array.from(candSet).sort((a,b) => a-b);
             if(isValidPattern(arr, lastDrawNums, targetHistory)) { generatedSet = arr; }
         }
@@ -451,7 +356,6 @@
                 }).join(', ');
             };
 
-            // 결과창 내부 구성 (찜하기 버튼 연동)
             resultArea.innerHTML = 
                 `<span style="color:#008CBA; font-size:0.9em;">행운의 추천 조합</span><br><br>
                  <div style="background:#fff; padding:15px; border-radius:50px; display:inline-block; border:2px solid #a8e6cf; margin-bottom:5px;">
@@ -468,12 +372,9 @@
         }
     }
 
-    // 초기 로드 시 클라우드 데이터와 로컬 스크랩 목록 동시에 불러오기
     window.onload = function() {
         loadDataFromCloud();
-        renderFavorites();
     };
 </script>
-
 </body>
 </html>
