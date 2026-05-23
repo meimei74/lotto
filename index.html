@@ -16,36 +16,69 @@
             display: flex; 
             justify-content: center; 
         }
-        .wrapper { display: flex; gap: 20px; width: 100%; max-width: 950px; align-items: flex-start; }
+        
+        .wrapper { display: flex; gap: 20px; width: 100%; max-width: 1000px; align-items: flex-start; }
         .container { background: #fff; flex: 1; min-width: 0; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .favorites-box { background: #fff; width: 340px; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        /* 우측 사이드바 래퍼 */
+        .right-sidebar { display: flex; flex-direction: column; width: 340px; flex-shrink: 0; }
+        .box-panel { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .box-panel:last-child { margin-bottom: 0; }
+
         h2 { text-align: center; color: #008CBA; margin-top: 0; margin-bottom: 25px; font-size: 1.6em; }
         h3 { border-bottom: 2px solid #eee; padding-bottom: 8px; margin-top: 30px; margin-bottom: 15px; color: #555; text-align: center; font-size: 1.15em; }
+        .box-title { margin-top: 0; border-bottom: 2px solid #008CBA; padding-bottom: 5px; color: #008CBA; font-size: 1.1em; text-align: center; font-weight: bold; margin-bottom: 15px; }
+        
         input[type="number"], input[type="text"] { width: 100%; padding: 12px; text-align: center; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; background-color: #fafafa; outline: none; }
         input:focus { border-color: #008CBA; background-color: #fff; }
+        
         .btn { width: 100%; padding: 14px 10px; border: none; border-radius: 8px; background-color: #008CBA; color: white; font-weight: bold; font-size: 15px; cursor: pointer; transition: all 0.3s; }
         .btn:hover { background-color: #007bb5; transform: translateY(-1px); }
-        .btn:active { transform: translateY(0); }
         .btn-excel { background-color: #27ae60; }
         .btn-excel:hover { background-color: #219150; }
         .btn-secondary { background-color: #7f8c8d; }
         .btn-secondary:hover { background-color: #636e72; }
         .btn-scrap { background-color: #ff7675; width: auto; display: inline-block; padding: 10px 20px; margin-top: 15px; font-size: 14px; }
         .btn-scrap:hover { background-color: #e84393; }
+        
         .num-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 10px 0; }
         .side-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .btn-group-full { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+        
         .result-box { background-color: #eafaf1; border: 1px solid #a8e6cf; padding: 25px 15px; border-radius: 10px; margin-top: 20px; font-size: 1.3em; font-weight: bold; text-align: center; line-height: 1.6; word-break: keep-all; }
         .status-text { text-align: center; color: #888; font-size: 0.95em; margin: 20px 0; font-weight: bold; padding: 10px; background: #f9f9f9; border-radius: 8px; }
         .loading { color: #3498db; }
         .info-text { text-align: center; font-size: 0.85em; color: #666; margin-top: 4px; margin-bottom: 12px; }
         .excel-guide { font-size: 0.8em; color: #999; text-align: center; margin-top: 10px; line-height: 1.5; padding: 10px; border: 1px dashed #ddd; border-radius: 8px; }
-        .fav-item { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 12px 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #eee; font-weight: bold; font-size: 0.95em; word-break: keep-all; white-space: nowrap; }
-        .fav-item > span:first-child { overflow: hidden; text-overflow: ellipsis; padding-right: 5px; }
+        
+        .list-item { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 12px 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #eee; font-weight: bold; font-size: 0.95em; word-break: keep-all; white-space: nowrap; }
+        .list-item > span:first-child { overflow: hidden; text-overflow: ellipsis; padding-right: 5px; }
         .fav-del { cursor: pointer; color: #ff7675; font-size: 0.9em; padding: 0 5px; flex-shrink: 0; }
         .fav-del:hover { color: #c0392b; font-weight: bold; }
-        @media (max-width: 890px) { .wrapper { flex-direction: column; align-items: center; } .favorites-box { width: 100%; } .num-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; } .btn-group { grid-template-columns: 1fr; } h2 { font-size: 1.4em; } }
+
+        /* 최근 당첨 번호 아이템용 스타일 */
+        .recent-item { padding: 10px; font-size: 0.9em; }
+        .recent-round { color: #008CBA; font-weight: 900; margin-right: 5px; width: 45px; display: inline-block;}
+        .recent-bonus { color: #e74c3c; font-size: 0.9em; }
+
+        /* PC 기본: 모바일용 최근 내역 숨김 */
+        .mobile-recent { display: none; }
+        .desktop-recent { display: block; }
+
+        /* 모바일 세로 모드 최적화 (890px 이하) */
+        @media (max-width: 890px) { 
+            .wrapper { flex-direction: column; align-items: center; } 
+            .right-sidebar { width: 100%; } 
+            .num-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; } 
+            .btn-group { grid-template-columns: 1fr; } 
+            h2 { font-size: 1.4em; } 
+            
+            /* 모바일에서는 PC용 최근 10회 숨기고, 데이터 입력란 위에 5회 표시 */
+            .desktop-recent { display: none; }
+            .mobile-recent { display: block; background: #f4f8fa; border: 1px solid #dcebf4; padding: 15px; border-radius: 10px; margin-top: 30px; margin-bottom: -15px; }
+            .mobile-recent h3 { border-bottom: 2px solid #baddf0; color: #3498db; margin-top: 0;}
+        }
     </style>
 </head>
 <body>
@@ -69,6 +102,11 @@
         <div id="resultArea" class="result-box" style="display: none;"></div>
         <div id="dataStatus" class="status-text loading">데이터 동기화 중...</div>
 
+        <div class="mobile-recent">
+            <h3>📅 최근 당첨 번호 (5회)</h3>
+            <div id="mobileRecentList"></div>
+        </div>
+
         <h3>📝 최근 당첨 번호 데이터 입력</h3>
         <div class="side-inputs">
             <input type="number" id="round" placeholder="회차">
@@ -87,14 +125,21 @@
         <div class="excel-guide"><b>[엑셀 업로드 가이드]</b><br>A열:회차 | B~G열:당첨번호(1~6) | H열:보너스</div>
     </div>
 
-    <div class="favorites-box">
-        <h3 style="margin-top: 0; border-bottom: 2px solid #008CBA; padding-bottom: 5px; color: #008CBA;">⭐ 찜한 번호 보관함</h3>
-        <div id="favList"></div>
+    <div class="right-sidebar">
+        <div class="box-panel desktop-recent">
+            <div class="box-title">📅 최근 당첨 번호 (10회)</div>
+            <div id="desktopRecentList"></div>
+        </div>
+
+        <div class="box-panel">
+            <div class="box-title">⭐ 찜한 번호 보관함</div>
+            <div id="favList"></div>
+        </div>
     </div>
 </div>
 
 <script>
-    // 🚨 새 배포 후 발급받은 구글 웹 앱 URL 주소로 꼭 교체해줘!
+    // 🚨 내 구글 웹 앱 URL 주소로 꼭 교체해줘!
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbznPecZNcyWuUBk0VAC84__dgeClT3Pb4X_Cd5wJpAzHfW3Z2FqewccW-O_s_a3aQsvQQ/exec'; 
 
     let lottoHistory = [];
@@ -110,7 +155,9 @@
             statusDiv.className = "status-text";
             statusDiv.innerText = `현재 저장된 데이터: ${lottoHistory.length}개`;
 
-            // 클라우드에서 찜한 번호 가져오기
+            // 당첨 번호 화면 렌더링 호출
+            renderRecentDraws();
+
             const favResponse = await fetch(GAS_URL + '?type=fav');
             favorites = await favResponse.json();
             renderFavorites();
@@ -119,6 +166,28 @@
             statusDiv.style.color = "red";
             statusDiv.innerText = "연결 실패! 구글 시트 설정을 확인해줘.";
         }
+    }
+
+    // 💡 최근 당첨 번호(10회/5회) 화면 출력 로직
+    function renderRecentDraws() {
+        if (!lottoHistory || lottoHistory.length === 0) return;
+
+        const makeHtml = (limit) => {
+            return lottoHistory.slice(0, limit).map(d => {
+                const numStr = d.nums.map(n => String(n).padStart(2, '0')).join(', ');
+                const bonusStr = String(d.bonus).padStart(2, '0');
+                return `
+                    <div class="list-item recent-item">
+                        <span><span class="recent-round">${d.round}회</span> [ ${numStr} ]</span>
+                        <span class="recent-bonus">+ ${bonusStr}</span>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        // PC는 10개, 모바일은 5개 채우기
+        document.getElementById('desktopRecentList').innerHTML = makeHtml(10);
+        document.getElementById('mobileRecentList').innerHTML = makeHtml(5);
     }
 
     function renderFavorites() {
@@ -131,7 +200,7 @@
         favorites.forEach((setStr, index) => {
             const formatted = setStr.split(',').map(n => String(n).padStart(2, '0')).join(', ');
             favListDiv.innerHTML += `
-                <div class="fav-item">
+                <div class="list-item">
                     <span title="[ ${formatted} ]">📌 [ ${formatted} ]</span>
                     <span class="fav-del" onclick="deleteFavorite(${index})">❌</span>
                 </div>
@@ -144,7 +213,6 @@
             alert('이미 보관함에 찜한 번호야!');
             return;
         }
-        // 시트에 저장 요청 전송
         await fetch(GAS_URL, {
             method: 'POST',
             mode: 'no-cors',
@@ -157,7 +225,6 @@
 
     async function deleteFavorite(index) {
         const numStr = favorites[index];
-        // 시트에서 삭제 요청 전송
         await fetch(GAS_URL, {
             method: 'POST',
             mode: 'no-cors',
