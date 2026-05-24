@@ -92,6 +92,8 @@
         <input type="text" id="excludedNums" placeholder="제외수 (예: 4, 18) 최대 10개">
         <div class="info-text">(제외할 번호를 쉼표로 구분)</div>
 
+        <div id="suggestedExclusions" style="font-size: 0.85em; color: #e74c3c; text-align: center; margin-bottom: 15px; font-weight: bold; display: none;"></div>
+
         <div class="btn-group-full" style="margin-top:15px;">
             <button class="btn" onclick="generateLotto(100)">최근 100회 데이터 기준 추출</button>
             <button class="btn" onclick="generateLotto(50)">최근 50회 데이터 기준 추출</button>
@@ -157,6 +159,8 @@
 
             // 당첨 번호 화면 렌더링 호출
             renderRecentDraws();
+
+            renderSuggestedExclusions();
 
             const favResponse = await fetch(GAS_URL + '?type=fav');
             favorites = await favResponse.json();
@@ -438,7 +442,21 @@
             resultArea.innerHTML = "조건에 맞는 조합을 찾지 못했어. 고정수나 제외수 조건을 조금 완화해 봐!";
         }
     }
+// 💡 최근 3회차 기반 추천 제외수 안내 기능
+    function renderSuggestedExclusions() {
+        if (!lottoHistory || lottoHistory.length < 3) return;
 
+        let recentSet = new Set();
+        // 최근 3회차 당첨 번호 추출 (보너스 번호 제외)
+        for(let i = 0; i < 3; i++) {
+            lottoHistory[i].nums.forEach(n => recentSet.add(n));
+        }
+        let recentArr = Array.from(recentSet).sort((a,b) => a-b);
+
+        const targetDiv = document.getElementById('suggestedExclusions');
+        targetDiv.style.display = 'block';
+        targetDiv.innerHTML = `💡 추천 제외수 (최근 3회 출현번호)<br><span style="color:#666; font-weight:normal; font-size:0.95em; display:inline-block; margin-top:5px; padding:5px 10px; background:#ffeeee; border-radius:5px;">${recentArr.join(', ')}</span>`;
+    }
     window.onload = function() {
         loadDataFromCloud();
     };
