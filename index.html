@@ -28,14 +28,16 @@
         h3 { border-bottom: 2px solid #eee; padding-bottom: 8px; margin-top: 30px; margin-bottom: 15px; color: #555; text-align: center; font-size: 1.15em; }
         .box-title { margin-top: 0; border-bottom: 2px solid #008CBA; padding-bottom: 5px; color: #008CBA; font-size: 1.1em; text-align: center; font-weight: bold; margin-bottom: 15px; }
         
-        /* 일반 입력칸 스타일 */
         input[type="number"].basic-input, input[type="text"].basic-input { 
             width: 100%; padding: 12px; text-align: center; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; background-color: #fafafa; outline: none; 
         }
         input:focus { border-color: #008CBA; background-color: #fff; }
 
-        /* 네모 칸 입력 스타일 */
-        .square-inputs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 5px; }
+        /* 💡 가로 배열을 위한 새로운 컨테이너 스타일 */
+        .number-row { display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 5px; }
+        .suggested-badges { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+
+        .square-inputs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
         .square-inputs input[type="number"] {
             width: 45px; height: 45px; padding: 0; text-align: center; font-size: 16px; font-weight: bold;
             border: 1px solid #ccc; border-radius: 8px; background-color: #fafafa; outline: none; transition: all 0.2s;
@@ -62,8 +64,8 @@
         .result-box { background-color: #eafaf1; border: 1px solid #a8e6cf; padding: 25px 15px; border-radius: 10px; margin-top: 20px; font-size: 1.3em; font-weight: bold; text-align: center; line-height: 1.6; word-break: keep-all; }
         .status-text { text-align: center; color: #888; font-size: 0.95em; margin: 20px 0; font-weight: bold; padding: 10px; background: #f9f9f9; border-radius: 8px; }
         .loading { color: #3498db; }
-        .label-text { text-align: center; font-size: 0.9em; font-weight: bold; color: #444; margin-bottom: 8px; margin-top: 15px; }
-        .info-text { text-align: center; font-size: 0.8em; color: #888; margin-bottom: 12px; }
+        .label-text { text-align: center; font-size: 0.95em; font-weight: bold; color: #444; margin-bottom: 12px; margin-top: 15px; }
+        .info-text { text-align: center; font-size: 0.8em; color: #888; margin-bottom: 15px; }
         .excel-guide { font-size: 0.8em; color: #999; text-align: center; margin-top: 10px; line-height: 1.5; padding: 10px; border: 1px dashed #ddd; border-radius: 8px; }
         
         .list-item { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 12px 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #eee; font-weight: bold; font-size: 0.95em; word-break: keep-all; white-space: nowrap; }
@@ -78,15 +80,14 @@
         .mobile-recent { display: none; }
         .desktop-recent { display: block; }
 
-        /* 추천 뱃지 스타일 (제외수: 붉은색, 고정수: 푸른색) */
         .exclusion-badge {
-            display: inline-block; margin: 3px; padding: 5px 10px; background: #fff0f0; border: 1px solid #ffcccc;
+            display: inline-block; padding: 5px 10px; background: #fff0f0; border: 1px solid #ffcccc;
             border-radius: 6px; color: #d35400; font-weight: bold; font-size: 1.1em; cursor: help; transition: all 0.2s;
         }
         .exclusion-badge:hover { background: #ffe6e6; transform: translateY(-1px); }
 
         .inclusion-badge {
-            display: inline-block; margin: 3px; padding: 5px 10px; background: #e6f7ff; border: 1px solid #b3e0ff;
+            display: inline-block; padding: 5px 10px; background: #e6f7ff; border: 1px solid #b3e0ff;
             border-radius: 6px; color: #007bb5; font-weight: bold; font-size: 1.1em; cursor: help; transition: all 0.2s;
         }
         .inclusion-badge:hover { background: #cceeff; transform: translateY(-1px); }
@@ -100,6 +101,7 @@
             .desktop-recent { display: none; }
             .mobile-recent { display: block; background: #f4f8fa; border: 1px solid #dcebf4; padding: 15px; border-radius: 10px; margin-top: 30px; margin-bottom: -15px; }
             .mobile-recent h3 { border-bottom: 2px solid #baddf0; color: #3498db; margin-top: 0;}
+            .number-row { flex-direction: column; gap: 8px; } /* 모바일에서는 위아래로 떨어지게 */
         }
     </style>
 </head>
@@ -110,36 +112,48 @@
         <h2>🎰 로또 번호 추출기 (Cloud)</h2>
         <h3>🎯 번호 조건 설정 & 추출</h3>
         
-        <div class="label-text">📌 고정수 (최대 5개)</div>
-        <div class="square-inputs" id="fixedContainer">
-            <input type="number" class="fixed-box" min="1" max="45">
-            <input type="number" class="fixed-box" min="1" max="45">
-            <input type="number" class="fixed-box" min="1" max="45">
-            <input type="number" class="fixed-box" min="1" max="45">
-            <input type="number" class="fixed-box" min="1" max="45">
+        <div class="label-text">
+            📌 직접 입력 (최대 5개) <span style="color:#ddd; margin:0 10px;">|</span> <span style="color:#007bb5;">💡 통계 추천</span>
         </div>
-        <div class="info-text">(반드시 포함할 번호를 각 칸에 하나씩 입력)</div>
+        <div class="number-row">
+            <div class="square-inputs" id="fixedContainer">
+                <input type="number" class="fixed-box" min="1" max="45">
+                <input type="number" class="fixed-box" min="1" max="45">
+                <input type="number" class="fixed-box" min="1" max="45">
+                <input type="number" class="fixed-box" min="1" max="45">
+                <input type="number" class="fixed-box" min="1" max="45">
+            </div>
+            <div style="color: #ccc; font-size: 1.2em;">👉</div>
+            <div id="suggestedInclusions" class="suggested-badges">
+                <span style="font-size:0.85em; color:#999;">데이터 분석 중...</span>
+            </div>
+        </div>
+        <div class="info-text">(추천 번호 위에 마우스를 올리면 이유가 표시됩니다)</div>
         
-        <div id="suggestedInclusions" style="text-align: center; margin-bottom: 20px; display: none;"></div>
-
-        <div class="label-text" style="margin-top: 25px;">🚫 제외수 (최대 10개)</div>
-        <div class="square-inputs" id="exclContainer">
-            <input type="number" class="excl-box" min="1" max="45">
-            <input type="number" class="excl-box" min="1" max="45">
-            <input type="number" class="excl-box" min="1" max="45">
-            <input type="number" class="excl-box" min="1" max="45">
-            <input type="number" class="excl-box" min="1" max="45">
-            <input type="number" class="excl-box" min="1" max="45">
-            <input type="number" class="excl-box" min="1" max="45">
-            <input type="number" class="excl-box" min="1" max="45">
-            <input type="number" class="excl-box" min="1" max="45">
-            <input type="number" class="excl-box" min="1" max="45">
+        <div class="label-text" style="margin-top: 25px;">
+            🚫 제외수 직접 입력 <span style="color:#ddd; margin:0 10px;">|</span> <span style="color:#d35400;">💡 통계 추천</span>
+        </div>
+        <div class="number-row">
+            <div class="square-inputs" id="exclContainer">
+                <input type="number" class="excl-box" min="1" max="45">
+                <input type="number" class="excl-box" min="1" max="45">
+                <input type="number" class="excl-box" min="1" max="45">
+                <input type="number" class="excl-box" min="1" max="45">
+                <input type="number" class="excl-box" min="1" max="45">
+                <input type="number" class="excl-box" min="1" max="45">
+                <input type="number" class="excl-box" min="1" max="45">
+                <input type="number" class="excl-box" min="1" max="45">
+                <input type="number" class="excl-box" min="1" max="45">
+                <input type="number" class="excl-box" min="1" max="45">
+            </div>
+            <div style="color: #ccc; font-size: 1.2em;">👉</div>
+            <div id="suggestedExclusions" class="suggested-badges">
+                 <span style="font-size:0.85em; color:#999;">데이터 분석 중...</span>
+            </div>
         </div>
         <div class="info-text" style="margin-bottom: 5px;">(절대 나오지 않을 번호를 각 칸에 입력)</div>
-        
-        <div id="suggestedExclusions" style="text-align: center; margin-bottom: 20px; display: none;"></div>
 
-        <div class="btn-group-full" style="margin-top:10px;">
+        <div class="btn-group-full" style="margin-top:15px;">
             <button class="btn" onclick="generateLotto(100)">최근 100회 데이터 기준 추출</button>
             <button class="btn" onclick="generateLotto(50)">최근 50회 데이터 기준 추출</button>
             <button class="btn" onclick="generateLotto(30)">최근 30회 데이터 기준 추출</button>
@@ -200,7 +214,7 @@
             statusDiv.innerText = `현재 저장된 데이터: ${lottoHistory.length}개`;
 
             renderRecentDraws();
-            renderSuggestedInclusions(); // 💡 고정수 렌더링 호출
+            renderSuggestedInclusions(); 
             renderSuggestedExclusions(); 
 
             const favResponse = await fetch(GAS_URL + '?type=fav');
@@ -213,12 +227,9 @@
         }
     }
 
-    // 💡 통계 기반 추천 고정수 알고리즘
+    // 💡 통계 기반 추천 고정수 로직 (가로 배열을 위해 HTML 구조 변경)
     function renderSuggestedInclusions() {
         if (!lottoHistory || lottoHistory.length < 10) return;
-
-        let inclusions = new Set();
-        let reasons = {}; 
 
         let counts10 = new Array(46).fill(0);
         for(let i=0; i<10; i++) {
@@ -235,41 +246,33 @@
             }
         }
 
-        // 1. 단기 강세 후 휴식 (눌림목)
+        let candidates = [];
         for(let i=1; i<=45; i++) {
             if(counts10[i] >= 2 && intervals[i] >= 1 && intervals[i] <= 3) {
-                inclusions.add(i);
-                reasons[i] = `단기 강세 후 눌림목 타점 (${intervals[i]}주 미출현)`;
+                let score = (counts10[i] * 10) + (10 - intervals[i]); 
+                candidates.push({ num: i, score: score, reason: `단기 강세 후 눌림목 (${intervals[i]}주 미출현)` });
+            }
+            else if(intervals[i] >= 6 && intervals[i] <= 9) {
+                let score = intervals[i] * 2; 
+                candidates.push({ num: i, score: score, reason: `반등 임박 타점 (${intervals[i]}주 미출현)` });
             }
         }
 
-        // 2. 반등 임박 구간 (6~9주 미출현)
-        for(let i=1; i<=45; i++) {
-            if(intervals[i] >= 6 && intervals[i] <= 9) {
-                if(!inclusions.has(i)) {
-                    inclusions.add(i);
-                    reasons[i] = `반등 임박 타점 (${intervals[i]}주 미출현)`;
-                }
-            }
-        }
+        candidates.sort((a, b) => b.score - a.score);
+        let top5 = candidates.slice(0, 5);
+        top5.sort((a, b) => a.num - b.num);
 
-        let sortedInclusions = Array.from(inclusions).sort((a,b) => a-b);
         const targetDiv = document.getElementById('suggestedInclusions');
-        targetDiv.style.display = 'block';
-
-        let htmlText = `<div style="font-size:0.9em; color:#007bb5; font-weight:bold; margin-bottom:8px;">💡 통계 기반 추천 고정수</div>`;
-        if (sortedInclusions.length === 0) {
-             htmlText += `<div style="font-size:0.85em; color:#888;">현재 조건에 해당하는 추천 번호가 없습니다.</div>`;
+        let htmlText = '';
+        if (top5.length === 0) {
+             htmlText = `<span style="font-size:0.85em; color:#888;">조건 만족 번호 없음</span>`;
         } else {
-             htmlText += sortedInclusions.map(n => 
-                `<span class="inclusion-badge" title="${reasons[n]}">${n}</span>`
-             ).join('');
-             htmlText += `<div style="font-size:0.75em; color:#999; margin-top:5px;">(마우스를 올리면 추천 이유 확인 가능)</div>`;
+             htmlText = top5.map(c => `<span class="inclusion-badge" title="${c.reason}">${c.num}</span>`).join('');
         }
         targetDiv.innerHTML = htmlText;
     }
 
-    // 통계 기반 추천 제외수 알고리즘
+    // 💡 통계 기반 추천 제외수 로직 (가로 배열을 위해 HTML 구조 변경)
     function renderSuggestedExclusions() {
         if (!lottoHistory || lottoHistory.length < 15) return;
 
@@ -298,16 +301,12 @@
 
         let sortedExclusions = Array.from(exclusions).sort((a,b) => a-b);
         const targetDiv = document.getElementById('suggestedExclusions');
-        targetDiv.style.display = 'block';
-
-        let htmlText = `<div style="font-size:0.9em; color:#d35400; font-weight:bold; margin-bottom:8px;">💡 통계 기반 추천 제외수</div>`;
+        
+        let htmlText = '';
         if (sortedExclusions.length === 0) {
-             htmlText += `<div style="font-size:0.85em; color:#888;">현재 조건에 해당하는 추천 번호가 없습니다.</div>`;
+             htmlText = `<span style="font-size:0.85em; color:#888;">조건 만족 번호 없음</span>`;
         } else {
-             htmlText += sortedExclusions.map(n => 
-                `<span class="exclusion-badge" title="${reasons[n]}">${n}</span>`
-             ).join('');
-             htmlText += `<div style="font-size:0.75em; color:#999; margin-top:5px;">(마우스를 올리면 추천 이유 확인 가능)</div>`;
+             htmlText = sortedExclusions.map(n => `<span class="exclusion-badge" title="${reasons[n]}">${n}</span>`).join('');
         }
         targetDiv.innerHTML = htmlText;
     }
