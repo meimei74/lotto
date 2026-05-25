@@ -150,7 +150,7 @@
 
 <script>
     // 🚨 내 구글 웹 앱 URL 주소로 교체 (현재 양파 주소 유지함!)
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxO1CFvX-i_CMP7MXHxcLzeWVrb3B2kE2wEiuP200YXIjVheMGe8Llekg9pkXV04JgD1w/exec'; 
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxlbsd15PRWC5jc1KosQiWwdIAaOCbhj7FLTz-qfGFPexTjwfptgCaK6yOFCtStRHNVKg/exec'; 
 
     let lottoHistory = [];
     let favorites = [];
@@ -219,30 +219,17 @@
         targetDiv.innerHTML = `💡 기본 추천 제외수 (최근 3회 출현번호)<br><span style="color:#666; font-weight:normal; font-size:0.95em; display:inline-block; margin-top:5px; padding:5px 10px; background:#ffeeee; border-radius:5px;">${recentArr.join(', ')}</span>`;
     }
 
-    // 4. AI 추천 제외수 호출 로직
+    // 💡 4. AI 추천 제외수 호출 로직 (에러 완벽 차단 GET 방식)
     async function getAiExclusions() {
-        if (!lottoHistory || lottoHistory.length === 0) {
-            alert('아직 클라우드 데이터를 불러오지 못했어!');
-            return;
-        }
-
         const btn = document.querySelector('.btn-ai');
         const originalText = btn.innerText;
         btn.innerText = "🤖 분석 중...";
         btn.style.backgroundColor = "#95a5a6";
         btn.disabled = true;
 
-        // 최신 30회 데이터만 전송
-        const recent30 = lottoHistory.slice(0, 30);
-
         try {
-            // 응답을 JSON으로 받아와야 하므로 no-cors를 쓰지 않고 text/plain 방식을 활용함
-            const response = await fetch(GAS_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ action: 'analyzeAI', data: recent30 })
-            });
-            
+            // 변경점: POST 대신 주소 뒤에 파라미터를 붙이는 GET 방식으로 우회!
+            const response = await fetch(GAS_URL + '?action=analyzeAI');
             const json = await response.json();
             
             if(json.status === "success") {
@@ -253,7 +240,7 @@
             }
         } catch (error) {
             console.error(error);
-            alert('구글 서버(GAS)와 통신하는 중 문제가 생겼어! 스크립트 코드나 권한 배포를 확인해 줘.');
+            alert('인터넷 연결이 끊겼거나 주소 설정에 문제가 있어!');
         } finally {
             btn.innerText = originalText;
             btn.style.backgroundColor = "#8e44ad";
